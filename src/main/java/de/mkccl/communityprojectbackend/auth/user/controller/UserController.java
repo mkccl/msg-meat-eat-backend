@@ -62,7 +62,6 @@ public class UserController {
     @PostMapping("user/register")
     public ResponseEntity<UserModel> addUser(@RequestBody UserModel userModel) {
 
-        //adsadas
 
         try {
 
