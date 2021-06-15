@@ -1,20 +1,16 @@
 package de.mkccl.communityprojectbackend.auth.user.controller;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import de.mkccl.communityprojectbackend.auth.user.model.UserFlagModel;
 import de.mkccl.communityprojectbackend.auth.user.model.UserModel;
 import de.mkccl.communityprojectbackend.auth.user.repository.UserRepository;
+import de.mkccl.communityprojectbackend.storage.model.BackgroundModel;
+import de.mkccl.communityprojectbackend.storage.utils.BackgroundImageEnum;
 import org.hibernate.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -75,7 +71,21 @@ public class UserController {
             }
 
         } catch (NullPointerException | NonUniqueResultException npe) {
-            System.out.println(npe);
+
+            UserFlagModel flag = new UserFlagModel();
+            BackgroundModel backgroundModel = new BackgroundModel();
+
+            backgroundModel.setPath(userModel.getUserId());
+
+            flag.setNewUser(true);
+            flag.setHasBackgroundImage(true);
+
+            backgroundModel.setPath(BackgroundImageEnum.BACKGROUND4.getValue());
+            backgroundModel.setType("jpeg");
+
+            userModel.setDashboardImage(backgroundModel);
+            userModel.setFlag(flag);
+
 
             String bcryptHashString = BCrypt.withDefaults().hashToString(12, userModel.getPassword().toCharArray());
             userModel.setPassword(bcryptHashString);
