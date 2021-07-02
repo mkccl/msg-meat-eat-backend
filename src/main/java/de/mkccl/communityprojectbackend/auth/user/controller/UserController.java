@@ -23,7 +23,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/auth/")
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class UserController {
 
     @Autowired

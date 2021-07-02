@@ -1,5 +1,6 @@
 package de.mkccl.communityprojectbackend.auth.user.model;
 
+import de.mkccl.communityprojectbackend.project.model.ProjectModel;
 import de.mkccl.communityprojectbackend.storage.model.BackgroundModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by
@@ -26,6 +28,7 @@ import javax.persistence.*;
 public class UserModel {
 
     @Id
+    @Column(name = "auth_user_id")
     private String userId;
 
     @Column(name = "auth_user_firstname")
@@ -47,5 +50,13 @@ public class UserModel {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_dashboard_image_userId")
     private BackgroundModel dashboardImage;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_project_member",
+            joinColumns = { @JoinColumn(name = "auth_user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "project_id") }
+    )
+    private List<ProjectModel> project;
 
 }
